@@ -85,10 +85,14 @@ jobs:
         export MLFLOW_TRACKING_USERNAME=${{ secrets.MLFLOW_TRACKING_USERNAME }}
         export MLFLOW_TRACKING_PASSWORD=${{ secrets.MLFLOW_TRACKING_PASSWORD }}
         
+        # List files to verify paths
+        echo "Current directory contents:"
+        ls -R
+        
         mlflow run MLProject \
           --experiment-name "stunting-prediction" \
           --env-manager=conda \
-          -P data_file="data_balita_preprocessing/data_balita.csv" \
+          -P data_file="data_balita_preprocessing/X_train.csv" \
           -P model_path="model_balita.joblib"
 
     - name: Download MLflow Artifacts
