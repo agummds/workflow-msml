@@ -85,10 +85,18 @@ jobs:
         export MLFLOW_TRACKING_USERNAME=${{ secrets.MLFLOW_TRACKING_USERNAME }}
         export MLFLOW_TRACKING_PASSWORD=${{ secrets.MLFLOW_TRACKING_PASSWORD }}
         
+        # Create data directory in MLProject
+        mkdir -p MLProject/data_balita_preprocessing
+        
+        # Copy data files to MLProject directory
+        cp data_balita_preprocessing/*.csv MLProject/data_balita_preprocessing/
+        cp data_balita_preprocessing/*.joblib MLProject/data_balita_preprocessing/
+        
         # List files to verify paths
         echo "Current directory contents:"
         ls -R
         
+        # Run MLflow project
         mlflow run MLProject \
           --experiment-name "stunting-prediction" \
           --env-manager=conda \
