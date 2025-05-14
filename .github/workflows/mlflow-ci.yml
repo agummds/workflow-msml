@@ -64,13 +64,16 @@ jobs:
         MLFLOW_TRACKING_USERNAME: ${{ secrets.MLFLOW_TRACKING_USERNAME }}
         MLFLOW_TRACKING_PASSWORD: ${{ secrets.MLFLOW_TRACKING_PASSWORD }}
         MLFLOW_TRACKING_URI: "https://dagshub.com/agummds/Stunting-Toddler.mlflow"
+        MLFLOW_DISABLE_ENV_MANAGER_CONDA_WARNING: "TRUE"
       run: |
         conda init bash
         source ~/.bashrc
         conda activate stunting-prediction
         mlflow run MLProject \
           --experiment-name "stunting-prediction" \
-          --env-manager=conda
+          --env-manager=conda \
+          -P data_file="data_balita_preprocessing/data_balita.csv" \
+          -P model_path="model_balita.joblib"
 
     - name: Download MLflow Artifacts
       shell: bash -l {0}
