@@ -40,6 +40,7 @@ jobs:
       env:
         MLFLOW_TRACKING_USERNAME: ${{ secrets.MLFLOW_TRACKING_USERNAME }}
         MLFLOW_TRACKING_PASSWORD: ${{ secrets.MLFLOW_TRACKING_PASSWORD }}
+        MLFLOW_TRACKING_URI: "https://dagshub.com/agummds/Stunting-Toddler.mlflow"
       run: |
         conda init bash
         source ~/.bashrc
@@ -47,12 +48,22 @@ jobs:
         python -c "
         import mlflow
         import os
+        from mlflow.tracking import MlflowClient
+        
+        # Set tracking URI
         mlflow.set_tracking_uri('https://dagshub.com/agummds/Stunting-Toddler.mlflow')
+        
+        # Create client with credentials
+        client = MlflowClient(
+            tracking_uri='https://dagshub.com/agummds/Stunting-Toddler.mlflow',
+            registry_uri='https://dagshub.com/agummds/Stunting-Toddler.mlflow'
+        )
+        
         print('MLflow tracking URI:', mlflow.get_tracking_uri())
         print('Testing connection...')
         try:
-            mlflow.search_experiments()
-            print('Connection successful!')
+            experiments = client.search_experiments()
+            print('Connection successful! Found', len(experiments), 'experiments')
         except Exception as e:
             print('Connection failed:', str(e))
             exit(1)
@@ -69,6 +80,11 @@ jobs:
         conda init bash
         source ~/.bashrc
         conda activate stunting-prediction
+        
+        # Set up MLflow credentials
+        export MLFLOW_TRACKING_USERNAME=${{ secrets.MLFLOW_TRACKING_USERNAME }}
+        export MLFLOW_TRACKING_PASSWORD=${{ secrets.MLFLOW_TRACKING_PASSWORD }}
+        
         mlflow run MLProject \
           --experiment-name "stunting-prediction" \
           --env-manager=conda \
