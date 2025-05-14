@@ -189,4 +189,6 @@ jobs:
       with:
         context: ./MLProject
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/stunting-prediction:latest 
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/stunting-prediction:latest
+        cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/stunting-prediction:buildcache
+        cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/stunting-prediction:buildcache,mode=max 
